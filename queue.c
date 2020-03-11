@@ -35,13 +35,12 @@ void q_free(queue_t *q)
         /* Store the next element */
         t = p->next;
 
+        /* Free current storage */
         free(p->value);
         free(p);
 
         p = t;
     }
-
-    q->n = 0;
 
     free(q);
 }
