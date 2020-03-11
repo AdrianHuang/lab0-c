@@ -5,8 +5,15 @@
 #include "harness.h"
 #include "queue.h"
 
-#undef BUBBLE_SORT
-#define SELECTION_SORT
+static void merge_sort(queue_t *q);
+static void selection_sort(queue_t *q);
+static void bubble_sort(queue_t *q);
+
+void (*sort_func[SORT_METHOD_NUM])(queue_t *q) = {
+    merge_sort,
+    selection_sort,
+    bubble_sort,
+};
 
 /*
  * Create empty queue.
@@ -193,13 +200,92 @@ void q_reverse(queue_t *q)
     q->head = curr;
 }
 
-#ifdef BUBBLE_SORT
+static void merge_sort_divide(queue_t *q, queue_t *second_half)
+{
+    list_ele_t *current, *mid;
+
+    if (!q)
+        return;
+
+    if (!(mid = q->head)) {
+        second_half->head = NULL;
+        return;
+    }
+
+    /* Divide the queue into two sub-queues. */
+    for (current = mid->next; current;) {
+        current = current->next;
+        if (!current)
+            break;
+
+        current = current->next;
+        mid = mid->next;
+    }
+
+    second_half->head = mid->next;
+    mid->next = NULL;
+
+    second_half->size = q->size >> 1;
+    q->size = (q->size + 1) >> 1;
+}
+
+static void merge(queue_t *q, queue_t *second_half, queue_t *out)
+{
+    list_ele_t *p1, *p2, *out_p;
+
+    p1 = q->head;
+    p2 = second_half->head;
+
+    /* Find who the head is if we want to merge two queues. */
+    if (strcmp(p1->value, p2->value) > 0) {
+        out->head = p2;
+        p2 = p2->next;
+    } else {
+        out->head = p1;
+        p1 = p1->next;
+    }
+
+    out_p = out->head;
+
+    /* Merge two queues. */
+    while (p1 && p2) {
+        if (strcmp(p1->value, p2->value) > 0) {
+            out_p->next = p2;
+            p2 = p2->next;
+        } else {
+            out_p->next = p1;
+            p1 = p1->next;
+        }
+
+        out_p = out_p->next;
+    }
+
+    out_p->next = p1 ? p1 : p2;
+
+    out->size = q->size + second_half->size;
+}
+
+static void merge_sort(queue_t *q)
+{
+    queue_t second_half;
+
+    if (q->size <= 1)
+        return;
+
+    merge_sort_divide(q, &second_half);
+    merge_sort(q);
+    merge_sort(&second_half);
+    merge(q, &second_half, q);
+}
+
 static void bubble_sort(queue_t *q)
 {
-    list_ele_t *curr, *curr_next, *prev;
+    list_ele_t *curr, *curr_next;
     int i, j;
 
     for (i = q->size; i > 0; i--) {
+        list_ele_t *prev;
+
         curr = q->head;
         prev = NULL;
 
@@ -223,9 +309,7 @@ static void bubble_sort(queue_t *q)
         }
     }
 }
-#endif
 
-#ifdef SELECTION_SORT
 static list_ele_t **get_min_element(list_ele_t **min, list_ele_t **e)
 {
     while (*e) {
@@ -268,21 +352,16 @@ static void selection_sort(queue_t *q)
         }
     }
 }
-#endif
 
 /*
  * Sort elements of queue in ascending order
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
-void q_sort(queue_t *q)
+void q_sort(queue_t *q, int sort_method)
 {
-    if (!q)
+    if (!q || q->size <= 1)
         return;
 
-#ifdef SELECTION_SORT
-    selection_sort(q);
-#elif defined(BUBBLE_SORT)
-    bubble_sort(q);
-#endif
+    sort_func[sort_method](q);
 }

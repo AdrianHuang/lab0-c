@@ -11,6 +11,15 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+/* Enumeration for different sorting methods. */
+enum {
+    MERGE_SORT,
+    SELECTION_SORT,
+    BUBBLE_SORT,
+
+    SORT_METHOD_NUM,
+};
+
 /* Data structure declarations */
 
 /* Linked list element (You shouldn't need to change this) */
@@ -91,6 +100,6 @@ void q_reverse(queue_t *q);
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
-void q_sort(queue_t *q);
+void q_sort(queue_t *q, int sort_method);
 
 #endif /* LAB0_QUEUE_H */
