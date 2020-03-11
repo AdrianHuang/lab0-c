@@ -27,10 +27,6 @@ typedef struct {
     list_ele_t *head; /* Head of linked list of elements */
     list_ele_t *tail; /* Tail of linked list of elements */
     int n;            /* Number of elements in linked list */
-    /* TODO: You will need to add more fields to this structure
-     *        to efficiently implement q_size and q_insert_tail.
-     */
-    /* TODO: Remove the above comment when you are about to implement. */
 } queue_t;
 
 /* Operations on queue */
