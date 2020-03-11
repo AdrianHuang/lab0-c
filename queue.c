@@ -77,7 +77,7 @@ bool q_insert_head(queue_t *q, char *s)
 
     newh->next = q->head;
     q->head = newh;
-    q->n++;
+    q->size++;
 
     if (!q->tail)
         q->tail = newh;
@@ -120,7 +120,7 @@ bool q_insert_tail(queue_t *q, char *s)
         q->tail->next = newh;
 
     q->tail = newh;
-    q->n++;
+    q->size++;
 
     return true;
 }
@@ -137,7 +137,7 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
     list_ele_t *old_head;
 
-    if (!q || !q->n)
+    if (!q || !q->size)
         return false;
 
     if (sp) {
@@ -149,7 +149,7 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 
     old_head = q->head;
     q->head = q->head->next;
-    q->n--;
+    q->size--;
 
     free(old_head->value);
     free(old_head);
@@ -166,7 +166,7 @@ int q_size(queue_t *q)
     if (!q)
         return 0;
 
-    return q->n;
+    return q->size;
 }
 
 /*
@@ -202,7 +202,7 @@ static void bubble_sort(queue_t *q)
     list_ele_t *curr, *curr_next, *prev;
     int i, j;
 
-    for (i = q->n; i > 0; i--) {
+    for (i = q->size; i > 0; i--) {
         curr = q->head;
         prev = NULL;
 
