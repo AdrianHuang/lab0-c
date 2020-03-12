@@ -549,15 +549,13 @@ bool do_sort(int argc, char *argv[])
         report(3, "Warning: Calling sort on single node");
     error_check();
 
-    if (argc == 2) {
+    if (argc == 2)
         sort_method = atoi(argv[1]);
-        if (sort_method >= SORT_METHOD_NUM)
-            sort_method = MERGE_SORT;
-    }
+    q_sort_register_method(sort_method);
 
     set_noallocate_mode(true);
     if (exception_setup(true))
-        q_sort(q, sort_method);
+        q_sort(q);
     exception_cancel();
     set_noallocate_mode(false);
 

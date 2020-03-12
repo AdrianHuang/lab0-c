@@ -100,6 +100,11 @@ void q_reverse(queue_t *q);
  * No effect if q is NULL or empty. In addition, if q has only one
  * element, do nothing.
  */
-void q_sort(queue_t *q, int sort_method);
+void (*q_sort)(queue_t *q);
+
+/*
+ * Register the sorting method.
+ */
+void q_sort_register_method(int sort_method);
 
 #endif /* LAB0_QUEUE_H */

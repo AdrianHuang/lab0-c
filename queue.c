@@ -269,7 +269,7 @@ static void merge_sort(queue_t *q)
 {
     queue_t second_half;
 
-    if (q->size <= 1)
+    if (!q || q->size <= 1)
         return;
 
     merge_sort_divide(q, &second_half);
@@ -282,6 +282,9 @@ static void bubble_sort(queue_t *q)
 {
     list_ele_t *curr, *curr_next;
     int i, j;
+
+    if (!q || q->size <= 1)
+        return;
 
     for (i = q->size; i > 0; i--) {
         list_ele_t *prev;
@@ -326,6 +329,9 @@ static void selection_sort(queue_t *q)
     list_ele_t **curr; /* Current indirect element */
     list_ele_t *tmp;
 
+    if (!q || q->size <= 1)
+        return;
+
     for (curr = &q->head; *curr; curr = &(*curr)->next) {
         list_ele_t **min; /* Minimal indirect element */
 
@@ -354,14 +360,13 @@ static void selection_sort(queue_t *q)
 }
 
 /*
- * Sort elements of queue in ascending order
- * No effect if q is NULL or empty. In addition, if q has only one
- * element, do nothing.
+ * Register the sorting method.
  */
-void q_sort(queue_t *q, int sort_method)
+void q_sort_register_method(int sort_method)
 {
-    if (!q || q->size <= 1)
-        return;
+    /* Sanity check */
+    if (sort_method < MERGE_SORT || sort_method >= SORT_METHOD_NUM)
+        sort_method = MERGE_SORT;
 
-    sort_func[sort_method](q);
+    q_sort = sort_func[sort_method];
 }
