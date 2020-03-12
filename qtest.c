@@ -94,7 +94,9 @@ static void console_init()
         "rhq", do_remove_head_quiet,
         "                | Remove from head of queue without reporting value.");
     add_cmd("reverse", do_reverse, "                | Reverse queue");
-    add_cmd("sort", do_sort, "                | Sort queue in ascending order");
+    add_cmd("sort", do_sort,
+            " [index]        | Sort queue in ascending order, where index"
+            " == 0 (default: merge sort), 1 (selection sort), 2 (bubble sort)");
     add_cmd("size", do_size,
             " [n]            | Compute queue size n times (default: n == 1)");
     add_cmd("show", do_show, "                | Show queue contents");
