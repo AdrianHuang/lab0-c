@@ -4,6 +4,7 @@
 
 #include "harness.h"
 #include "queue.h"
+#include "strnatcmp.h"
 
 static void merge_sort(queue_t *q);
 static void selection_sort(queue_t *q);
@@ -237,7 +238,7 @@ static void merge(queue_t *q, queue_t *second_half, queue_t *out)
     p2 = second_half->head;
 
     /* Find who the head is if we want to merge two queues. */
-    if (strcmp(p1->value, p2->value) > 0) {
+    if (strnatcmp(p1->value, p2->value) > 0) {
         out->head = p2;
         p2 = p2->next;
     } else {
@@ -249,7 +250,7 @@ static void merge(queue_t *q, queue_t *second_half, queue_t *out)
 
     /* Merge two queues. */
     while (p1 && p2) {
-        if (strcmp(p1->value, p2->value) > 0) {
+        if (strnatcmp(p1->value, p2->value) > 0) {
             out_p->next = p2;
             p2 = p2->next;
         } else {
@@ -295,7 +296,7 @@ static void bubble_sort(queue_t *q)
         for (j = 0; j < i - 1; j++) {
             curr_next = curr->next;
 
-            if (strcmp(curr->value, curr_next->value) > 0) {
+            if (strnatcmp(curr->value, curr_next->value) > 0) {
                 if (!prev)
                     q->head = curr_next;
                 else
@@ -316,7 +317,7 @@ static void bubble_sort(queue_t *q)
 static list_ele_t **get_min_element(list_ele_t **min, list_ele_t **e)
 {
     while (*e) {
-        if (strcmp((*min)->value, (*e)->value) > 0)
+        if (strnatcmp((*min)->value, (*e)->value) > 0)
             min = e;
         e = &(*e)->next;
     }
