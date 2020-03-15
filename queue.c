@@ -130,6 +130,9 @@ bool q_insert_tail(queue_t *q, char *s)
     q->tail = newh;
     q->size++;
 
+    if (!q->head)
+        q->head = newh;
+
     return true;
 }
 
