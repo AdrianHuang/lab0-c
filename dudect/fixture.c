@@ -117,6 +117,11 @@ static bool report(void)
     }
 }
 
+static int cmp(const int64_t *a, const int64_t *b)
+{
+    return (int) (*a - *b);
+}
+
 static bool doit(int mode)
 {
     int64_t *before_ticks = calloc(number_measurements + 1, sizeof(int64_t));
@@ -135,6 +140,10 @@ static bool doit(int mode)
 
     measure(before_ticks, after_ticks, input_data, mode);
     differentiate(exec_times, before_ticks, after_ticks);
+
+    qsort(exec_times, number_measurements, sizeof(int64_t),
+          (int (*)(const void *, const void *)) cmp);
+
     update_statistics(exec_times, classes);
     bool ret = report();
 
